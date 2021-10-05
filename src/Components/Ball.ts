@@ -9,13 +9,13 @@ export class Ball extends Graphics {
 
     this.beginFill(color);
     this.lineStyle(10, color);
-    this.drawCircle(0, 0, 25); // add sizes
+    this.drawCircle(0, 0, 25);
     this.endFill();
 
     this.x = pos.posX;
     this.y = pos.posY;
 
-    this.acceleration = new Point(pos.accX, pos.accY); // add direction
+    this.acceleration = new Point(pos.accX, pos.accY);
 
     this.interactive = true;
   }

@@ -67,19 +67,16 @@ export class Scene extends Container {
       gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
     }
 
-    console.log(
-      gameMap.get(this.gameKeys.xPos),
-      "AFTER gameMap.get(this.gameKeys.xPos)"
-    );
-
     let isHit = false;
 
     ball.on("mouseover", () => {
       isHit = true;
+      console.log("MOUSEOVER", isHit);
     });
 
     ball.on("mouseout", () => {
       isHit = false;
+      console.log("MOUSEOUT", isHit);
     });
 
     this.addChild(ball);
@@ -90,10 +87,7 @@ export class Scene extends Container {
       ball.acceleration.x = gameMap.get(this.gameKeys.xAcc);
       ball.acceleration.y = gameMap.get(this.gameKeys.yAcc);
 
-
       const mouseCoords = this.app.renderer.plugins.interaction.mouse.global;
-
-      let hit;
 
       ball.acceleration.set(ball.acceleration.x * 1, ball.acceleration.y * 1);
 
@@ -109,17 +103,32 @@ export class Scene extends Container {
         gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
       }
 
-      if ((hit = app.renderer.plugins.interaction.hitTest(mouseCoords))) {
-        if (hit instanceof Ball && !isHit) {
-          if (ball.x < mouseCoords.x) {
-            ball.acceleration.x = -ball.acceleration.x;
-            gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
-          }
+      // Mouse hit
+      if (app.renderer.plugins.interaction.hitTest(mouseCoords) && !isHit) {
+        console.log("HIT");
 
-          if (ball.y < mouseCoords.y) {
-            ball.acceleration.y = -ball.acceleration.y;
-            gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
-          }
+        if (ball.y < mouseCoords.y && ball.x < mouseCoords.x) {
+          console.log("XY");
+
+          ball.acceleration.x = -ball.acceleration.x;
+          ball.acceleration.y = -ball.acceleration.y;
+          gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
+          gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
+        } else if (ball.x < mouseCoords.x) {
+          console.log("X");
+
+          ball.acceleration.x = -ball.acceleration.x;
+          gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
+        } else if (ball.y < mouseCoords.y) {
+          console.log("Y");
+
+          ball.acceleration.y = -ball.acceleration.y;
+          gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
+        } else {
+          ball.acceleration.x = -ball.acceleration.x;
+          ball.acceleration.y = -ball.acceleration.y;
+          gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
+          gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
         }
       }
 
@@ -128,10 +137,5 @@ export class Scene extends Container {
       gameMap.set(this.gameKeys.yPos, ball.y);
       gameMap.set(this.gameKeys.xPos, ball.x);
     }, this);
-  }
-
-  resizeScene(screenWidth: number, screenHeight: number): void {
-    this.screenWidth = screenWidth;
-    this.screenHeight = screenHeight;
   }
 }

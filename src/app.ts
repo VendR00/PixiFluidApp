@@ -79,6 +79,7 @@ const resize = (): void => {
 
 const renderGame = () => {
   window.addEventListener("resize", resize);
+  resize();
   app.stage.addChild(scene);
 };
 
