@@ -2,11 +2,14 @@ import { Container, Ticker, Application } from "pixi.js";
 import { Ball } from "../Components/Ball";
 import { SharedMap, IFluidContainer } from "fluid-framework";
 
+
 export const gameKeys = {
   xPos: "x-position",
   yPos: "y-position",
   xAcc: "x-acceleration",
   yAcc: "y-acceleration",
+  color: "color",
+  diameter: "diameter",
 };
 
 export const containerSchema: any = {
@@ -37,46 +40,51 @@ export class Scene extends Container {
     this.screenWidth = screenWidth;
     this.screenHeight = screenHeight;
 
-    let defaultPosition;
+    let ballConfig;
 
     const gameMap: any = this.container.initialObjects.gameMap;
 
+    // Set ball configuration
     if (!isNew) {
-      defaultPosition = {
+      ballConfig = {
         posX: gameMap.get(this.gameKeys.xPos),
         posY: gameMap.get(this.gameKeys.yPos),
         accX: gameMap.get(this.gameKeys.xAcc),
         accY: gameMap.get(this.gameKeys.yAcc),
+        color: gameMap.get(this.gameKeys.color),
+        diameter: gameMap.get(this.gameKeys.diameter)
       };
     } else {
-      defaultPosition = {
+      ballConfig = {
         posX: 100,
         posY: 100,
-        accX: 5,
-        accY: 4,
+        accX: 3,
+        accY: 2,
+        color: 0x883997,
+        diameter: 25
       };
     }
 
-    const ball: Ball = new Ball(0x883997, defaultPosition);
+    const ball: Ball = new Ball(ballConfig);
 
-    // set default coordinates
+    // Set default to shared map coordinates
     if (isNew) {
       gameMap.set(this.gameKeys.xPos, ball.x);
       gameMap.set(this.gameKeys.yPos, ball.y);
       gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
       gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
+      gameMap.set(this.gameKeys.color, ball.color);
+      gameMap.set(this.gameKeys.diameter, ball.diameter);
     }
 
     let isHit = false;
 
     ball.on("mouseover", () => {
       isHit = true;
-      console.log("MOUSEOVER", isHit);
     });
 
     ball.on("mouseout", () => {
       isHit = false;
-      console.log("MOUSEOUT", isHit);
     });
 
     this.addChild(ball);
@@ -91,39 +99,33 @@ export class Scene extends Container {
 
       ball.acceleration.set(ball.acceleration.x * 1, ball.acceleration.y * 1);
 
-      // If so, reverse acceleration in that direction
-      if (ball.x < 25 || ball.x > this.screenWidth - 25) {
-        // 25 change on ball size
+      // Reverse acceleration in that direction
+      if (ball.x < ball.diameter || ball.x > this.screenWidth - ball.diameter) {
         ball.acceleration.x = -ball.acceleration.x;
         gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
       }
 
-      if (ball.y < 25 || ball.y > this.screenHeight - 25) {
+      if (ball.y < ball.diameter || ball.y > this.screenHeight - ball.diameter) {
         ball.acceleration.y = -ball.acceleration.y;
         gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
       }
 
       // Mouse hit
       if (app.renderer.plugins.interaction.hitTest(mouseCoords) && !isHit) {
-        console.log("HIT");
-
         if (ball.y < mouseCoords.y && ball.x < mouseCoords.x) {
-          console.log("XY");
-
           ball.acceleration.x = -ball.acceleration.x;
           ball.acceleration.y = -ball.acceleration.y;
           gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
           gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
+
         } else if (ball.x < mouseCoords.x) {
-          console.log("X");
-
           ball.acceleration.x = -ball.acceleration.x;
           gameMap.set(this.gameKeys.xAcc, ball.acceleration.x);
-        } else if (ball.y < mouseCoords.y) {
-          console.log("Y");
 
+        } else if (ball.y < mouseCoords.y) {
           ball.acceleration.y = -ball.acceleration.y;
           gameMap.set(this.gameKeys.yAcc, ball.acceleration.y);
+
         } else {
           ball.acceleration.x = -ball.acceleration.x;
           ball.acceleration.y = -ball.acceleration.y;
@@ -134,6 +136,7 @@ export class Scene extends Container {
 
       ball.x += ball.acceleration.x * deltaTime;
       ball.y += ball.acceleration.y * deltaTime;
+
       gameMap.set(this.gameKeys.yPos, ball.y);
       gameMap.set(this.gameKeys.xPos, ball.x);
     }, this);

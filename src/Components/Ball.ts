@@ -1,21 +1,25 @@
 import { Graphics, Point } from "pixi.js";
-import { position } from "../interfaces/ball.interface";
+import { config } from "../interfaces/ball.interface";
 
 export class Ball extends Graphics {
   acceleration: Point;
+  diameter: number;
+  color: number;
 
-  constructor(color: number, pos: position) {
+  constructor(config: config) {
     super();
 
-    this.beginFill(color);
-    this.lineStyle(10, color);
-    this.drawCircle(0, 0, 25);
+    this.beginFill(config.color);
+    this.lineStyle(10, config.color);
+    this.drawCircle(0, 0, config.diameter);
     this.endFill();
 
-    this.x = pos.posX;
-    this.y = pos.posY;
+    this.x = config.posX;
+    this.y = config.posY;
+    this.diameter = config.diameter;
+    this.color = config.color;
 
-    this.acceleration = new Point(pos.accX, pos.accY);
+    this.acceleration = new Point(config.accX, config.accY);
 
     this.interactive = true;
   }

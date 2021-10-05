@@ -1,6 +1,8 @@
-export interface position {
-    posX: number,
-    posY: number,
-    accX: number,
-    accY: number,
+export interface config {
+  color: number;
+  diameter: number;
+  posX: number;
+  posY: number;
+  accX: number;
+  accY: number;
 }

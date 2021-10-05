@@ -4,8 +4,6 @@ import { TinyliciousClient } from "@fluidframework/tinylicious-client";
 
 const client = new TinyliciousClient();
 
-console.log(client, "client");
-
 let scene: Scene;
 
 const app = new Application({
@@ -19,7 +17,6 @@ const app = new Application({
 
 const createNewGame = async (): Promise<string> => {
   const { container } = await client.createContainer(containerSchema);
-
   scene = new Scene(app, app.screen.width, app.screen.height, container);
   const id = await container.attach();
   renderGame();
@@ -41,10 +38,8 @@ async function start() {
   }
 }
 
-start().catch((error) => console.error(error));
-
 const resize = (): void => {
-  // current screen size
+  // Current screen size
   const screenWidth = Math.max(
     document.documentElement.clientWidth,
     window.innerWidth || 0
@@ -54,21 +49,21 @@ const resize = (): void => {
     window.innerHeight || 0
   );
 
-  // uniform scale for our game
+  // Uniform scale for our game
   const scale = Math.min(
     screenWidth / app.screen.width,
     screenHeight / app.screen.height
   );
 
-  // the "uniformly englarged" size for our game
+  // The "uniformly englarged" size for our game
   const enlargedWidth = Math.floor(scale * app.screen.width);
   const enlargedHeight = Math.floor(scale * app.screen.height);
 
-  // margins for centering our game
+  // Margins for centering our game
   const horizontalMargin = (screenWidth - enlargedWidth) / 2;
   const verticalMargin = (screenHeight - enlargedHeight) / 2;
 
-  // now we use css trickery to set the sizes and margins
+  // Now we use css trickery to set the sizes and margins
   app.view.style.width = `${enlargedWidth}px`;
   app.view.style.height = `${enlargedHeight}px`;
   app.view.style.marginLeft =
@@ -83,10 +78,5 @@ const renderGame = () => {
   app.stage.addChild(scene);
 };
 
-// const scene: Scene = new Scene(app, app.screen.width, app.screen.height);
-
-// window.addEventListener("resize", () => {
-//   scene.resizeScene(app.screen.width, app.screen.height);
-// });
-
-// app.stage.addChild(scene);
+// Start app
+start().catch((error) => console.error(error));
