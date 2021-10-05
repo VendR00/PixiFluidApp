@@ -1,10 +1,6 @@
 {
-    "name": "@fluid-example/hello-world",
+    "name": "Pixi",
     "version": "0.1.0",
-    "description": "Minimal Fluid Container & Data Object sample to implement a collaborative dice roller as a standalone app.",
-    "repository": "microsoft/FluidHelloWorld",
-    "license": "MIT",
-    "author": "Microsoft",
     "scripts": {
         "build": "webpack --env prod --env clean",
         "build:dev": "webpack --env clean",
@@ -14,7 +10,9 @@
     },
     "dependencies": {
         "@fluidframework/tinylicious-client": "^0.48.1",
-        "fluid-framework": "^0.48.1"
+        "buffer": "^6.0.3",
+        "fluid-framework": "^0.48.1",
+        "pixi.js": "^6.1.3"
     },
     "devDependencies": {
         "clean-webpack-plugin": "^3.0.0",
