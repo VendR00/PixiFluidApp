@@ -15,7 +15,7 @@ export class Ball extends Graphics {
     this.x = pos.posX;
     this.y = pos.posY;
 
-    this.acceleration = new Point(5, 4); // add direction
+    this.acceleration = new Point(pos.accX, pos.accY); // add direction
 
     this.interactive = true;
   }

@@ -26,7 +26,11 @@ const createNewGame = async (): Promise<string> => {
   return id;
 };
 
-const loadExistingGame = async (id: string) => {};
+const loadExistingGame = async (id: string) => {
+  const { container } = await client.getContainer(id, containerSchema);
+  scene = new Scene(app, app.screen.width, app.screen.height, container, false);
+  renderGame();
+};
 
 async function start() {
   if (location.hash) {
